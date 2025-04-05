@@ -1,0 +1,27 @@
+[package]
+name = "monitor_sistema_mcv"
+authors = ["Marcos Castellanos marcos.castellanos7815@alumnos.com.mx"]
+description = "Sistema de monitoreo de sistema de la clase de programacion de sistemas avanzados - Profesor: Jorge Ernesto Lopez Arce"
+version = "1.0.0"
+edition = "2024"
+
+[dependencies]
+# Dependencias necesarias para el proyecto
+
+# Para trabajar con hilos
+tokio = { version = "1.0", features = ["full"] }
+
+#para información del sistema
+sysinfo = "0.16" #info: https://docs.rs/sysinfo/latest/sysinfo/
+
+# Para manejar fechas y horas
+chrono = "0.4"
+
+#serializar datos
+serde = { version = "1.0", features = ["derive"] } 
+
+#trabajo con JSON
+serde_json = "1.0" # Para trabajar con JSON
+
+clap = { version = "4.4", features = ["derive"] }
+
