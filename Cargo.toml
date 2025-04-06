@@ -12,7 +12,7 @@ edition = "2024"
 tokio = { version = "1.0", features = ["full"] }
 
 #para información del sistema
-sysinfo = "0.16" #info: https://docs.rs/sysinfo/latest/sysinfo/
+sysinfo = "0.34.2" #info: https://docs.rs/sysinfo/latest/sysinfo/
 
 # Para manejar fechas y horas
 chrono = "0.4"
