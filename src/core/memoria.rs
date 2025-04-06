@@ -29,11 +29,14 @@
 ///
 /// ### Función principal
 /// - `obtener_info_memoria`: Devuelve una instancia de `MemoriaInfo` con la información actual de la memoria del sistema.
+///
+/// ###pendientes 
+/// implementar mediciones para cache
+///
 
-/// TODO: implementar mediciones para cache
-/// historial de cambios
-/// - 2025-05-05: Creación del módulo y definición de la estructura `MemoriaInfo`.
-
+/*
+ Historial de cambios
+ - `2025-05-05`: Creación del módulo y definición de la estructura `MemoriaInfo`.
 */
 use sysinfo::{System, RefreshKind};
 
