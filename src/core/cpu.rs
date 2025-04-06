@@ -8,8 +8,6 @@ Modulo para obtener la informacion de la CPU
 
 Creado en 2025-04-05
 */
-
-
 use sysinfo::{System, RefreshKind, CpuRefreshKind};
 
 pub struct CPUInfo {
