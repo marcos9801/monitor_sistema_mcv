@@ -122,3 +122,5 @@ impl DiscoInfo {
 pub fn obtener_info_disco() -> DiscosInfo {
     DiscosInfo::new()
 }
+
+
