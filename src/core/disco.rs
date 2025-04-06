@@ -1,20 +1,64 @@
-/*
-Modulo que implementa la obtencion de la informacion de los discos
-    - Cantidad de discos
-    - Espacio total
-    - Espacio libre
-    - Espacio usado
-    - Nombre del disco
-    - Sistema de archivos
-    - Espacio total del disco
-    - Espacio libre del disco
-    - Espacio usado del disco
-    - Ruta del disco
-    - Removible
-    - Solo lectura
+/// Módulo que implementa la obtención de la información de los discos:
+/// - Cantidad de discos.
+/// - Espacio total.
+/// - Espacio libre.
+/// - Espacio usado.
+/// - Nombre del disco.
+/// - Sistema de archivos.
+/// - Ruta del disco.
+/// - Indicador de si el disco es removible.
+/// - Indicador de si el disco es de solo lectura.
+///
+/// Este módulo define dos estructuras principales:
+///
+/// ### `DiscosInfo`
+/// Representa la información general de los discos del sistema.
+/// - `cantidad_discos`: Número total de discos detectados.
+/// - `espacio_total`: Espacio total de todos los discos en GB.
+/// - `espacio_libre`: Espacio libre de todos los discos en GB.
+/// - `espacio_usado`: Espacio usado de todos los discos en GB.
+/// - `discos`: Lista de información detallada de cada disco (`Vec<DiscoInfo>`).
+///
+/// #### Métodos de `DiscosInfo`
+/// - `get_cantidad_discos`: Devuelve la cantidad de discos.
+/// - `get_espacio_total`: Devuelve el espacio total de los discos.
+/// - `get_espacio_libre`: Devuelve el espacio libre de los discos.
+/// - `get_espacio_usado`: Devuelve el espacio usado de los discos.
+/// - `get_discos`: Devuelve la lista de discos.
+/// - `get_disco`: Devuelve la información de un disco específico por índice.
+/// - `new`: Constructor que crea una nueva instancia de `DiscosInfo` obteniendo la información del sistema.
+///
+/// ### `DiscoInfo`
+/// Representa la información detallada de un disco específico.
+/// - `nombre`: Nombre del disco.
+/// - `sistema_archivos`: Sistema de archivos del disco.
+/// - `espacio_total`: Espacio total del disco en GB.
+/// - `espacio_libre`: Espacio libre del disco en GB.
+/// - `espacio_usado`: Espacio usado del disco en GB.
+/// - `ruta`: Ruta de montaje del disco.
+/// - `removible`: Indica si el disco es removible.
+/// - `solo_lectura`: Indica si el disco es de solo lectura.
+///
+/// #### Métodos de `DiscoInfo`
+/// - `get_nombre`: Devuelve el nombre del disco.
+/// - `get_sistema_archivos`: Devuelve el sistema de archivos del disco.
+/// - `get_espacio_total`: Devuelve el espacio total del disco.
+/// - `get_espacio_libre`: Devuelve el espacio libre del disco.
+/// - `get_espacio_usado`: Devuelve el espacio usado del disco.
+/// - `get_ruta`: Devuelve la ruta de montaje del disco.
+/// - `get_removible`: Indica si el disco es removible.
+/// - `get_solo_lectura`: Indica si el disco es de solo lectura.
+/// - `new`: Constructor que crea una nueva instancia de `DiscoInfo` con los datos proporcionados.
+///
+/// ### Constantes
+/// - `B_TO_GB`: Constante para la conversión de bytes a gigabytes.
+///
+/// ### Función principal
+/// - `obtener_info_disco`: Devuelve una instancia de `DiscosInfo` con la información actual de los discos del sistema.
+///
+/// historial de cambios
+/// - 2025-05-05: Creación del módulo y definición de las estructuras `DiscosInfo` y `DiscoInfo`.
 
-Creado en 2025-04-05
-*/
 use sysinfo::{Disks};
 
 pub struct DiscosInfo {
@@ -42,11 +86,29 @@ const B_TO_GB: u64 = 1024 * 1024 * 1024; // conversion de bytes a GB
 
 impl DiscosInfo {
     // Getters
+    // Devuelve la cantidad de discos
+    // Retorno
+    // la cantidad de discos como un entero
     pub fn get_cantidad_discos(&self) -> usize { self.cantidad_discos }
+    // Devuelve el espacio total
+    // Retorno
+    // el espacio total como un flotante
     pub fn get_espacio_total(&self) -> f64 { self.espacio_total }
+    // Devuelve el espacio libre
+    // Retorno
+    // el espacio libre como un flotante
     pub fn get_espacio_libre(&self) -> f64 { self.espacio_libre }
+    // Devuelve el espacio usado
+    // Retorno
+    // el espacio usado como un flotante
     pub fn get_espacio_usado(&self) -> f64 { self.espacio_usado }
+    // Devuelve la lista de discos
+    // Retorno
+    // la lista de discos como un vector de DiscoInfo
     pub fn get_discos(&self) -> &Vec<DiscoInfo> { &self.discos }
+    // Devuelve el disco en la posicion index
+    // Retorno
+    // el disco en la posicion index como un DiscoInfo
     pub fn get_disco(&self, index: usize) -> &DiscoInfo {
         if index < self.discos.len() {
             &self.discos[index]
@@ -54,7 +116,9 @@ impl DiscosInfo {
             panic!("Índice fuera de rango");
         }
     }
-
+    // Constructor
+    // Crea una nueva instancia de DiscosInfo
+    // Retorno
     pub fn new() -> Self {
         let disks = Disks::new_with_refreshed_list();
         let mut discos: Vec<DiscoInfo> = Vec::new();
@@ -93,18 +157,77 @@ impl DiscosInfo {
     }
 }
 
+/// Representa la información acerca de un disco.
+///
+/// Esta estructura proporciona varios detalles sobre un disco, como su nombre,
+/// sistema de archivos, espacio total, espacio libre, espacio usado y otras propiedades.
 impl DiscoInfo {
-    // Getters
+    /// Devuelve el nombre del disco.
+    ///
+    /// # Retorna
+    /// Una cadena de texto que representa el nombre del disco.
     pub fn get_nombre(&self) -> &str { &self.nombre }
+
+    /// Devuelve el sistema de archivos del disco.
+    ///
+    /// # Retorna
+    /// Una cadena de texto que representa el sistema de archivos del disco.
     pub fn get_sistema_archivos(&self) -> &str { &self.sistema_archivos }
+
+    /// Devuelve el espacio total del disco.
+    ///
+    /// # Retorna
+    /// Un número de punto flotante que representa el espacio total del disco en bytes.
     pub fn get_espacio_total(&self) -> f64 { self.espacio_total }
+
+    /// Devuelve el espacio libre del disco.
+    ///
+    /// # Retorna
+    /// Un número de punto flotante que representa el espacio libre del disco en bytes.
     pub fn get_espacio_libre(&self) -> f64 { self.espacio_libre }
+
+    /// Devuelve el espacio usado del disco.
+    ///
+    /// # Retorna
+    /// Un número de punto flotante que representa el espacio usado del disco en bytes.
     pub fn get_espacio_usado(&self) -> f64 { self.espacio_usado }
+
+    /// Devuelve la ruta del disco.
+    ///
+    /// # Retorna
+    /// Una cadena de texto que representa la ruta del disco.
     pub fn get_ruta(&self) -> &str { &self.ruta }
+
+    /// Indica si el disco es removible.
+    ///
+    /// # Retorna
+    /// Un valor booleano:
+    /// - `true` si el disco es removible.
+    /// - `false` en caso contrario.
     pub fn get_removible(&self) -> bool { self.removible }
+
+    /// Indica si el disco es de solo lectura.
+    ///
+    /// # Retorna
+    /// Un valor booleano:
+    /// - `true` si el disco es de solo lectura.
+    /// - `false` en caso contrario.
     pub fn get_solo_lectura(&self) -> bool { self.solo_lectura }
-    //pub fn get_velocidad(&self) -> u64 { self.velocidad }
-    //pub fn get_tiempo_respuesta(&self) -> u64 { self.tiempo_respuesta }
+
+    /// Crea una nueva instancia de `DiscoInfo`.
+    ///
+    /// # Parámetros
+    /// - `nombre`: El nombre del disco como `String`.
+    /// - `sistema_archivos`: El sistema de archivos del disco como `String`.
+    /// - `espacio_total`: El espacio total del disco como `f64`.
+    /// - `espacio_libre`: El espacio libre del disco como `f64`.
+    /// - `espacio_usado`: El espacio usado del disco como `f64`.
+    /// - `ruta`: La ruta del disco como `String`.
+    /// - `removible`: Un valor booleano que indica si el disco es removible.
+    /// - `solo_lectura`: Un valor booleano que indica si el disco es de solo lectura.
+    ///
+    /// # Retorna
+    /// Una nueva instancia de `DiscoInfo`.
     pub fn new(nombre: String, sistema_archivos: String, espacio_total: f64, espacio_libre: f64, espacio_usado: f64, ruta: String, removible: bool, solo_lectura: bool) -> Self {
         DiscoInfo {
             nombre,
@@ -117,10 +240,8 @@ impl DiscoInfo {
             solo_lectura,
         }
     }
+    
 }
-
 pub fn obtener_info_disco() -> DiscosInfo {
     DiscosInfo::new()
 }
-
-
