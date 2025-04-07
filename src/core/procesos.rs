@@ -49,7 +49,7 @@
 /// ### TODO
 /// corregir lectura de uso cpu
 /// #### Historial de cambios
-/// - 2025-04-06: Creación del módulo y definición de estructuras `ProcesosInfo` y `ProcesoInfo`.
+/// - 2025-04-06: Creación del módulo y definición de estructuras `ProcesosInfo` y `ProcesoInfo`, y metodos para mostrar informacion.
 
 use sysinfo::{ProcessesToUpdate, ProcessRefreshKind, System, Pid};
 use std::thread::sleep;
@@ -177,6 +177,25 @@ impl ProcesosInfo{
             top_procesos_tiempo_ejecucion,
         }
     }
+    pub fn mostrar_info(&self) {
+        println!("Cantidad de procesos: {}", self.cantidad_procesos);
+        println!("Top 5 procesos que consumen más CPU:");
+        for proceso in &self.top_procesos_uso_cpu {
+            proceso.mostrar_info();
+        }
+        println!("Top 5 procesos que consumen más memoria:");
+        for proceso in &self.top_procesos_uso_memoria {
+            proceso.mostrar_info();
+        }
+        println!("Top 5 procesos que más tiempo han estado en CPU:");
+        for proceso in &self.top_procesos_tiempo_cpu {
+            proceso.mostrar_info();
+        }
+        println!("Top 5 procesos que más tiempo han estado en ejecución:");
+        for proceso in &self.top_procesos_tiempo_ejecucion {
+            proceso.mostrar_info();
+        }
+    }
 }
 
 impl ProcesoInfo{
@@ -239,7 +258,17 @@ impl ProcesoInfo{
             "{} días, {} horas, {} minutos, {} segundos",
             dias, horas, minutos, segundos_restantes
         )
-    }    
+    }   
+    pub fn mostrar_info(&self) {
+        println!("PID: {}", self.pid);
+        println!("Nombre: {}", self.nombre);
+        println!("Tiempo de ejecución: {} segundos", self.tiempo_ejecucion);
+        println!("Tiempo en CPU: {} segundos", self.tiempo_en_cpu);
+        println!("Uso de CPU: {:.2}%", self.uso_cpu);
+        println!("Uso de memoria: {} MB", self.uso_memoria);
+        println!("Uso de memoria virtual: {} MB", self.uso_memoria_virtual);
+        println!("Estado: {}", self.estado);
+    } 
 }
 /// Implementación del trait Display para la estructura `ProcesoInfo`.
 /// Permite mostrar la información del proceso en un formato legible.

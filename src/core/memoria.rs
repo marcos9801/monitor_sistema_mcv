@@ -37,6 +37,7 @@
 /*
  Historial de cambios
  - `2025-05-05`: Creación del módulo y definición de la estructura `MemoriaInfo`.
+    - `2025-05-06`: Implementación de métodos para obtener información de memoria.
 */
 use sysinfo::{System, RefreshKind};
 
@@ -131,6 +132,14 @@ impl MemoriaInfo {
             swap_libre: s.free_swap() / B_TO_MB,
             swap_usada: s.used_swap() / B_TO_MB,
         }
+    }
+    pub fn mostrar_info(&self) {
+        println!("Memoria total: {} MB", self.get_memoria_total());
+        println!("Memoria libre: {} MB", self.get_memoria_libre());
+        println!("Memoria usada: {} MB", self.get_memoria_usada());
+        println!("Swap total: {} MB", self.get_swap_total());
+        println!("Swap libre: {} MB", self.get_swap_libre());
+        println!("Swap usada: {} MB", self.get_swap_usada());
     }
 }
 

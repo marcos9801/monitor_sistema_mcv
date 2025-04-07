@@ -36,6 +36,7 @@
 ///
 /// historial de cambios
 /// - 2025-05-05: Creación del módulo y definición de la estructura `CPUInfo`.
+/// - 2025-05-06: Implementacion de metodo get_info() para obtener la información del CPU.
 
 
 use sysinfo::{System, RefreshKind, CpuRefreshKind};
@@ -96,6 +97,19 @@ impl CPUInfo {
             //nucleos_logicos: s.cpus().iter().map(|cpu| cpu.logical_count()).sum(),
             frecuencia: s.cpus()[0].frequency(),
             uso_nucleos: s.cpus().iter().map(|cpu| cpu.cpu_usage()).collect(),
+        }
+    }
+    pub fn mostrar_info(&self) {
+        println!("Marca del CPU: {}", self.get_brand());
+        println!("Temperatura del CPU: {} °C", self.get_temperatura());
+        println!("Cantidad de núcleos: {}", self.get_cantidad_nucleos());
+        //println!("Cantidad de núcleos E: {}", self.get_cantidad_nucleos_e());
+        //println!("Cantidad de núcleos P: {}", self.get_cantidad_nucleos_p());
+        //println!("Núcleos lógicos: {}", self.get_nucleos_logicos());
+        println!("Frecuencia del CPU: {} MHz", self.get_frecuencia());
+        println!("Uso de los núcleos:");
+        for (i, uso) in self.uso_nucleos.iter().enumerate() {
+            println!("Núcleo {}: {:.2} %", i, uso);
         }
     }
 }

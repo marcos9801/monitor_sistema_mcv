@@ -46,7 +46,7 @@
 /// - `obtener_info_interfaces`: Devuelve una instancia de `InterfacesInfo` con la información actual del sistema.
 ///
 /// historial de cambios
-/// - 2025-04-06: Creación del módulo y definición de estructuras `InterfacesInfo` y `InterfaceInfo`.
+/// - 2025-04-06: Creación del módulo y definición de estructuras `InterfacesInfo` y `InterfaceInfo`, junto con sus métodos y metodo para mostrar informacion.
 
 use sysinfo::{Networks, IpNetwork};
 
@@ -211,6 +211,21 @@ impl InterfacesInfo {
             total_mtu,
         }
     }
+    pub fn mostrar_info(&self) {
+        println!("Cantidad de interfaces: {}", self.cantidad_interfaces);
+        println!("Total de errores: {}", self.total_errores);
+        println!("Bytes recibidos: {}", self.total_bytes_recibidos);
+        println!("Bytes enviados: {}", self.total_bytes_enviados);
+        println!("Paquetes recibidos: {}", self.total_paquetes_recibidos);
+        println!("Paquetes enviados: {}", self.total_paquetes_enviados);
+        println!("Direcciones IP: {}", self.total_direcciones_ip);
+        println!("Direcciones MAC: {}", self.total_direcciones_mac);
+        println!("MTU total: {}", self.total_mtu);
+        for interface in &self.interfaces {
+            interface.mostrar_info();
+        }
+        println!("-----------------------------------");
+    }
 }
 
 impl InterfaceInfo {
@@ -296,7 +311,6 @@ impl InterfaceInfo {
             mtu: 0,
         }
     }
-
     /// Crea una nueva instancia de `InterfaceInfo` a partir de datos del sistema.
     ///
     /// # Parámetros
@@ -340,6 +354,19 @@ impl InterfaceInfo {
             direccion_mac,
             mtu,
         }
+    }
+    pub fn mostrar_info(&self) {
+        println!("Nombre: {}", self.nombre);
+        println!("Bytes recibidos: {}", self.bytes_recibidos);
+        println!("Bytes enviados: {}", self.bytes_enviados);
+        println!("Paquetes recibidos: {}", self.numero_paquetes_recibidos);
+        println!("Paquetes enviados: {}", self.numero_paquetes_enviados);
+        println!("Total de errores: {}", self.total_errores);
+        println!("Errores recibidos: {}", self.total_errores_recibidos);
+        println!("Errores enviados: {}", self.total_errores_enviados);
+        println!("Direcciones IP: {:?}", self.direccion_ip);
+        println!("Dirección MAC: {}", self.direccion_mac);
+        println!("MTU: {}", self.mtu);
     }
 }
 

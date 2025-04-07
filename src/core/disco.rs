@@ -58,6 +58,7 @@
 ///
 /// historial de cambios
 /// - 2025-05-05: Creación del módulo y definición de las estructuras `DiscosInfo` y `DiscoInfo`.
+/// - 2025-05-06: Implementación de métodos para obtener información de los discos.
 
 use sysinfo::{Disks};
 
@@ -146,6 +147,7 @@ impl DiscosInfo {
                 disk.is_read_only(),
             ));
         }
+        
 
         DiscosInfo {
             cantidad_discos: cantidad,
@@ -153,6 +155,22 @@ impl DiscosInfo {
             espacio_libre: libre,
             espacio_usado: total - libre,
             discos,
+        }
+    }
+    pub fn mostrar_info(&self) {
+        println!("Cantidad de discos: {}", self.cantidad_discos);
+        println!("Espacio total: {} GB", self.espacio_total);
+        println!("Espacio libre: {} GB", self.espacio_libre);
+        println!("Espacio usado: {} GB", self.espacio_usado);
+        for disco in &self.discos {
+            println!("Disco: {}", disco.get_nombre());
+            println!("Sistema de archivos: {}", disco.get_sistema_archivos());
+            println!("Espacio total: {} GB", disco.get_espacio_total());
+            println!("Espacio libre: {} GB", disco.get_espacio_libre());
+            println!("Espacio usado: {} GB", disco.get_espacio_usado());
+            println!("Ruta: {}", disco.get_ruta());
+            println!("Removible: {}", disco.get_removible());
+            println!("Solo lectura: {}", disco.get_solo_lectura());
         }
     }
 }
