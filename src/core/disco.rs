@@ -60,8 +60,12 @@
 /// - 2025-05-05: Creación del módulo y definición de las estructuras `DiscosInfo` y `DiscoInfo`.
 /// - 2025-05-06: Implementación de métodos para obtener información de los discos.
 
+/// TODO: obtener información de velocidad y tiempo de respuesta
+/// TODO: espacio usado y libre en porcentaje
+use serde::{Serialize};
 use sysinfo::{Disks};
 
+#[derive(Clone, Debug, Serialize)]
 pub struct DiscosInfo {
     cantidad_discos: usize,
     espacio_total: f64,
@@ -69,7 +73,7 @@ pub struct DiscosInfo {
     espacio_usado: f64,
     discos: Vec<DiscoInfo>,
 }
-
+#[derive(Clone, Debug, Serialize)]
 pub struct DiscoInfo {
     nombre: String,
     sistema_archivos: String,

@@ -1,6 +1,7 @@
 // src/main.rs
 // modulo principal donde se encuentran los modulos para obtener informacion del sistema
 mod core;  
+mod output; // modulo para la salida de informacion
 mod cli; // modulo para la interfaz de linea de comandos
 use clap::Parser;
 //modulo para la interfaz de linea de comandos

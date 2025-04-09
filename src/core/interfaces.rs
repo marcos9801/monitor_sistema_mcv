@@ -49,7 +49,10 @@
 /// - 2025-04-06: Creación del módulo y definición de estructuras `InterfacesInfo` y `InterfaceInfo`, junto con sus métodos y metodo para mostrar informacion.
 
 use sysinfo::{Networks, IpNetwork};
+use serde::Serialize;
 
+
+#[derive(Clone, Debug, Serialize)]
 pub struct InterfacesInfo {
     cantidad_interfaces: u64,
     interfaces: Vec<InterfaceInfo>,
@@ -63,6 +66,7 @@ pub struct InterfacesInfo {
     total_mtu: u64,
 }
 
+#[derive(Clone, Debug, Serialize)]
 pub struct InterfaceInfo {
     nombre: String,
     bytes_recibidos: u64,
@@ -72,7 +76,7 @@ pub struct InterfaceInfo {
     total_errores: u64,
     total_errores_recibidos: u64,
     total_errores_enviados: u64,
-    direccion_ip: Vec<IpNetwork>,
+    direccion_ip: Vec<String>,
     direccion_mac: String,
     mtu: u64, // tamaño máximo de la unidad de transmisión
 }
@@ -181,6 +185,11 @@ impl InterfacesInfo {
                 total_direcciones_mac += 1;
             }
             total_mtu += network.mtu();
+            let direccion_ip = network
+                .ip_networks()
+                .iter()
+                .map(|ip| ip.to_string()) // convierte IpNetwork a String
+                .collect::<Vec<String>>();
 
             let interface = InterfaceInfo::desde_sistema(
                 interface_name.to_string(),
@@ -191,12 +200,11 @@ impl InterfacesInfo {
                 network.total_errors_on_received() + network.total_errors_on_transmitted(),
                 network.total_errors_on_received(),
                 network.total_errors_on_transmitted(),
-                network.ip_networks().to_vec(),
+                direccion_ip, // <-- aquí cambias esto
                 network.mac_address().to_string(),
                 network.mtu(),
             );
-            interfaces_vec.push(interface);
-        }
+                    }
 
         InterfacesInfo {
             cantidad_interfaces,
@@ -281,7 +289,7 @@ impl InterfaceInfo {
     ///
     /// # Retorno
     /// Una referencia a un vector de `IpNetwork`.
-    pub fn get_direccion_ip(&self) -> &Vec<IpNetwork> { &self.direccion_ip }
+    pub fn get_direccion_ip(&self) -> &Vec<String> { &self.direccion_ip }
 
     /// Devuelve la dirección MAC de la interfaz.
     ///
@@ -306,7 +314,7 @@ impl InterfaceInfo {
             total_errores: 0,
             total_errores_recibidos: 0,
             total_errores_enviados: 0,
-            direccion_ip: Vec::<IpNetwork>::new(),
+            direccion_ip: Vec::<String>::new(),
             direccion_mac: String::new(),
             mtu: 0,
         }
@@ -337,7 +345,7 @@ impl InterfaceInfo {
         total_errores: u64,
         total_errores_recibidos: u64,
         total_errores_enviados: u64,
-        direccion_ip: Vec<IpNetwork>,
+        direccion_ip: Vec<String>,
         direccion_mac: String,
         mtu: u64,
     ) -> Self {

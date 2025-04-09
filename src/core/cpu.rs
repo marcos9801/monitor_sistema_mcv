@@ -38,9 +38,10 @@
 /// - 2025-05-05: Creación del módulo y definición de la estructura `CPUInfo`.
 /// - 2025-05-06: Implementacion de metodo get_info() para obtener la información del CPU.
 
-
+use serde::Serialize;   
 use sysinfo::{System, RefreshKind, CpuRefreshKind};
 
+#[derive(Clone, Debug, Serialize)]
 pub struct CPUInfo {
     brand: String,
     temperatura: f32,

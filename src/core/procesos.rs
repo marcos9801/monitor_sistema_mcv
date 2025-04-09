@@ -55,10 +55,12 @@ use sysinfo::{ProcessesToUpdate, ProcessRefreshKind, System, Pid};
 use std::thread::sleep;
 use std::time::Duration;
 use std::fmt;
+use serde::Serialize;
 
 /// Constante para la conversión de bytes a megabytes.
 const B_TO_MB: u64 = 1024 * 1024;
 
+#[derive(Clone, Debug, Serialize)]
 pub struct ProcesosInfo {
     cantidad_procesos: usize,
     procesos: Vec<ProcesoInfo>,
@@ -68,10 +70,9 @@ pub struct ProcesosInfo {
     top_procesos_tiempo_ejecucion: Vec<ProcesoInfo>,
 }
 
-#[derive(Clone)]
-#[derive(Debug)]
+#[derive(Clone, Debug, Serialize)]
 pub struct ProcesoInfo{
-    pid: Pid,
+    pid: i32,
     nombre: String,
     tiempo_ejecucion: u64,
     tiempo_en_cpu: u64,
@@ -149,7 +150,7 @@ impl ProcesosInfo{
         let mut procesos = Vec::<ProcesoInfo>::new();
         for (pid, process) in s.processes(){
             let proceso = ProcesoInfo {
-                pid: *pid,
+                pid: pid.as_u32() as i32,
                 nombre: process.name().to_string_lossy().into_owned(),
                 tiempo_ejecucion: process.run_time(),
                 tiempo_en_cpu: process.accumulated_cpu_time(),
@@ -203,7 +204,7 @@ impl ProcesoInfo{
     // Devuelve el pid
     // Retorno
     // el pid como un entero
-    pub fn get_pid(&self) -> Pid {
+    pub fn get_pid(&self) -> i32 {
         self.pid
     }
     // Devuelve el nombre

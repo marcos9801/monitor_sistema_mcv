@@ -1,7 +1,7 @@
 use clap::{Parser, Subcommand};
 
 use crate::core;
-
+use crate::output::{log, json};
 #[derive(Parser, Debug)]
 #[command(
     name = "monitor_sistema_mcv",
@@ -19,6 +19,10 @@ pub struct Cli {
     /// Muestra toda la información del sistema
     #[arg(long)]
     pub all: bool,
+
+    /// Genera un log del sistema en formato JSON
+    #[arg(long)]
+    pub log: bool,
 }
 pub struct Monitor {
     pub cpu: core::cpu::CPUInfo,
@@ -51,6 +55,19 @@ pub fn ejecutar(cli: Cli) {
         m.discos.mostrar_info();
         m.interfaces.mostrar_info();
         m.procesos.mostrar_info();
+        if cli.log {
+            log::generar_log_sistema(
+                &json::exportar_procesos_json(&m.procesos),
+                &json::exportar_interfaces_json(&m.interfaces),
+                &json::exportar_discos_json(&m.discos),
+                &json::exportar_memoria_json(&m.memoria),
+                &json::exportar_cpu_json(&m.cpu),
+            );
+            println!("Log generado en el archivo log_sistema.json");
+        } 
+        else {
+            println!("No se generó el log. Usa la opción --log para generarlo.");
+        }
         return;
     }
     if cli.command.is_none() {
