@@ -1,3 +1,24 @@
+/// Generador de logs en formato JSON
+///
+/// Este módulo contiene la función `generar_log_sistema` que genera un log del sistema
+/// en formato JSON. La función toma como parámetros las cadenas JSON de los procesos,
+/// interfaces, discos, memoria y CPU, y las combina en un solo objeto JSON.
+/// El log incluye información adicional como la versión, autor, fecha y hora.
+///
+/// # Ejemplo
+/// ```
+/// let procesos_json = exportar_procesos_json(&procesos);
+/// let interfaces_json = exportar_interfaces_json(&interfaces);
+/// let discos_json = exportar_discos_json(&discos);
+/// let memoria_json = exportar_memoria_json(&memoria);
+/// let cpu_json = exportar_cpu_json(&cpu);
+/// generar_log_sistema(&procesos_json, &interfaces_json, &discos_json, &memoria_json, &cpu_json);
+/// ```
+/// # Creado en 2025-abr-08
+/// TODO: implementar ruta de archivo
+
+
+
 use chrono::Utc;
 use serde_json::json;
 use std::fs::File;
@@ -25,7 +46,13 @@ pub fn generar_log_sistema(
 
     // Crear estructura JSON
     let log_json = json!({
-        "timestamp": timestamp,
+        "apendice":{
+            "version": "1.0.0",
+            "autor": "MArcos Castellanos Villaseñor",
+            "fecha": timestamp,
+            "dia": Utc::now().format("%Y-%m-%d").to_string(),
+            "hora": Utc::now().format("%H:%M:%S").to_string(),
+        },
         "procesos": serde_json::from_str::<serde_json::Value>(&procesos).unwrap(),
         "interfaces": serde_json::from_str::<serde_json::Value>(&interfaces).unwrap(),
         "discos": serde_json::from_str::<serde_json::Value>(&discos).unwrap(),
@@ -37,6 +64,7 @@ pub fn generar_log_sistema(
     let log_str = serde_json::to_string_pretty(&log_json).unwrap();
 
     // Guardar a archivo
-    let mut archivo = File::create("log_sistema.json").expect("No se pudo crear el archivo");
+    let filename = format!("{}_log_sistema.json", timestamp);
+    let mut archivo = File::create(filename).expect("No se pudo crear el archivo");
     archivo.write_all(log_str.as_bytes()).expect("No se pudo escribir en el archivo");
 }

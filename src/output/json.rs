@@ -1,3 +1,18 @@
+/// Exportar la información del sistema a formato JSON
+///
+/// Este módulo contiene funciones para exportar la información del sistema a formato JSON.
+/// Cada función toma una referencia a una estructura de información del sistema y devuelve
+/// una cadena JSON que representa esa información.
+
+/// # Ejemplo
+/// ```
+/// let procesos = ProcesosInfo::new();
+/// let procesos_json = exportar_procesos_json(&procesos);
+/// println!("{}", procesos_json);
+/// ```
+/// creado en 2025-apr- 8
+
+
 use crate::procesos::ProcesosInfo;
 use crate::interfaces::InterfacesInfo;
 use crate::disco::DiscosInfo;
