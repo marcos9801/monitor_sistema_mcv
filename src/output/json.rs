@@ -82,6 +82,7 @@ pub fn exportar_memoria_json(memoria: &MemoriaInfo) -> String {
 pub fn exportar_cpu_json(cpu: &CPUInfo) -> String {
     let cpu_json = json!({
         "cpu marca":cpu.get_brand(),
+        "temperatura": cpu.get_temperatura(),
         "cantidad nucleos": cpu.get_cantidad_nucleos(),
         "frecuencia": cpu.get_frecuencia(),
         "uso nucleos": cpu.get_uso_nucleos(),
