@@ -37,14 +37,16 @@
 /// historial de cambios
 /// - 2025-05-05: Creación del módulo y definición de la estructura `CPUInfo`.
 /// - 2025-05-06: Implementacion de metodo get_info() para obtener la información del CPU.
+/// - 2025-05-09: implementacion de funcion apra detectar temperatura pr4ocesadores Intel en Linux
 
 use serde::Serialize;   
+use std::process::Command; // Para ejecutar el comando `sensors`
 use sysinfo::{System, RefreshKind, CpuRefreshKind};
 
 #[derive(Clone, Debug, Serialize)]
 pub struct CPUInfo {
     brand: String,
-    temperatura: f32,
+    temperatura: Vec<String>,
     cantidad_nucleos: usize,
     //cantidad_nucleos_e: usize,
     //cantidad_nucleos_p: usize,
@@ -62,7 +64,7 @@ impl CPUInfo {
     // Devuelve la temperatura del CPU
     // Retorno
     // la temperatura del CPU como un flotante
-    pub fn get_temperatura(&self) -> f32 {self.temperatura}
+    pub fn get_temperatura(&self) -> &Vec<String> {&self.temperatura}
     // Devuelve la cantidad de nucleos del CPU
     // Retorno
     // la cantidad de nucleos del CPU como un entero
@@ -89,9 +91,16 @@ impl CPUInfo {
         let mut s = System::new_with_specifics(RefreshKind::nothing().with_cpu(CpuRefreshKind::everything())); //unicamnete refrescar la CPU
         std::thread::sleep(sysinfo::MINIMUM_CPU_UPDATE_INTERVAL); // MINIMUM_CPU_UPDATE_INTERVAL es definido en sysinfo valor por defecto 100ms
         s.refresh_cpu_all();
+        let temperaturas = match Self::obtener_temperaturas() {
+            Ok(temps) => temps,
+            Err(e) => {
+                println!("Error obteniendo temperaturas: {}", e);
+                Vec::new() // Retorna un vector vacío en caso de error
+            }
+        };
         Self {
             brand: s.cpus()[0].brand().to_string(),
-            temperatura: 0.0, //PLaceholder TODO: Implementar la obtención de temperatura
+            temperatura: temperaturas,
             cantidad_nucleos: s.cpus().len(),
             //cantidad_nucleos_e: s.cpus().iter().filter(|cpu| cpu.is_stepping()).count(),
             //cantidad_nucleos_p: s.cpus().iter().filter(|cpu| cpu.is_pstate()).count(),
@@ -102,7 +111,10 @@ impl CPUInfo {
     }
     pub fn mostrar_info(&self) {
         println!("Marca del CPU: {}", self.get_brand());
-        println!("Temperatura del CPU: {} °C", self.get_temperatura());
+        println!("Temperatura del CPU:");
+        for temp in self.get_temperatura() {
+            println!("  {}", temp);
+        }
         println!("Cantidad de núcleos: {}", self.get_cantidad_nucleos());
         //println!("Cantidad de núcleos E: {}", self.get_cantidad_nucleos_e());
         //println!("Cantidad de núcleos P: {}", self.get_cantidad_nucleos_p());
@@ -113,7 +125,53 @@ impl CPUInfo {
             println!("Núcleo {}: {:.2} %", i, uso);
         }
     }
-}
+
+    fn obtener_temperaturas() -> Result<Vec<String>, String> {
+        // Intentar ejecutar el comando `sensors`
+        let output = Command::new("sensors")
+            .output()
+            .map_err(|e| format!("Error al ejecutar `sensors`: {}", e))?;
+    
+        // Verificar si la salida no está vacía y convertirla a String
+        if !output.stdout.is_empty() {
+            let salida = String::from_utf8_lossy(&output.stdout);
+            let mut temperaturas = Vec::new();
+    
+            // Procesar cada línea en la salida
+            for linea in salida.lines() {
+                if linea.contains("Core") && linea.contains("°C") {
+                    if let Some((core, temp)) = Self::extraer_temperatura(linea) {
+                        temperaturas.push(format!("{} => {} °C", core, temp));
+                    }
+                }
+            }
+            
+            // Si no se encuentra ninguna temperatura
+            if temperaturas.is_empty() {
+                return Err("No se encontraron temperaturas en la salida de `sensors`".to_string());
+            }
+            
+            Ok(temperaturas)
+        } else {
+            Err("La salida de `sensors` está vacía".to_string())
+        }
+    }
+
+    fn extraer_temperatura(linea: &str) -> Option<(&str, f32)> {
+        let partes: Vec<&str> = linea.split_whitespace().collect();
+        if partes.len() < 3 {
+            return None;
+        }
+        let core = partes[0];
+        let temp_str = partes[2].replace("°C", "");
+        if let Ok(temp) = temp_str.parse::<f32>() {
+            Some((core, temp))
+        } else {
+            None
+        }
+    }
+    }
+
 
 // Función auxiliar para obtener la información
 pub fn obtener_info_cpu() -> CPUInfo {
