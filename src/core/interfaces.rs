@@ -204,6 +204,7 @@ impl InterfacesInfo {
                 network.mac_address().to_string(),
                 network.mtu(),
             );
+            interfaces_vec.push(interface);
                     }
 
         InterfacesInfo {

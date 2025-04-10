@@ -56,7 +56,7 @@ pub fn generar_log_sistema(
     let log_json = json!({
         "apendice":{
             "version": "1.0.0",
-            "autor": "MArcos Castellanos Villaseñor",
+            "autor": "Marcos Castellanos Villaseñor",
             "fecha": timestamp,
             "dia": fecha_hora.format("%d").to_string(),
             "hora": hora,

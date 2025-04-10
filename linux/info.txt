@@ -1,0 +1,47 @@
+sudo nano /etc/systemd/system/monitor_sistema_mcv.service
+
+2
+[Unit]
+Description=Ejecutar cargo run cada 5 minutos
+
+[Service]
+WorkingDirectory=/ruta/a/tu/proyecto
+ExecStart=/usr/bin/cargo run
+Restart=always
+User=tu_usuario
+Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+
+3
+
+4
+[Unit]
+Description=Ejecutar cargo run cada 5 minutos
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=5min
+Unit=monitor_sistema_mcv.service
+
+[Install]
+WantedBy=timers.target
+
+5
+sudo systemctl daemon-reload
+
+6
+marcos@sema:~/escuela/programacion_sistemas_avanzados/actividad_04/monitor_sistema_mcv/logs$ sudo systemctl status monitor_sistema_mcv.timer
+● monitor_sistema_mcv.timer - Ejecutar cargo run cada 5 minutos
+     Loaded: loaded (/etc/systemd/system/monitor_sistema_mcv.timer; enabled; vendor preset: enabled)
+     Active: active (waiting) since Wed 2025-04-09 21:55:11 CST; 1min 8s ago
+    Trigger: Wed 2025-04-09 22:01:15 CST; 4min 55s left
+   Triggers: ● monitor_sistema_mcv.service
+
+Apr 09 21:55:11 sema systemd[1]: Stopped Ejecutar cargo run cada 5 minutos.
+Apr 09 21:55:11 sema systemd[1]: Stopping Ejecutar cargo run cada 5 minutos...
+Apr 09 21:55:11 sema systemd[1]: Started Ejecutar cargo run cada 5 minutos.
+marcos@sema:~/escuela/programacion_sistemas_avanzados/actividad_04/monitor_sistema_mcv/logs$ ls
+2025-04-09T21:55:10-06:00_log_sistema.json  2025-04-09T21:55:34-06:00_log_sistema.json  2025-04-09T21:55:58-06:00_log_sistema.json
+2025-04-09T21:55:18-06:00_log_sistema.json  2025-04-09T21:55:42-06:00_log_sistema.json  2025-04-09T21:56:06-06:00_log_sistema.json
+2025-04-09T21:55:26-06:00_log_sistema.json  2025-04-09T21:55:50-06:00_log_sistema.json  2025-04-09T21:56:15-06:00_log_sistema.jsoncargo run -- --log
+
