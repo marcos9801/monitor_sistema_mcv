@@ -2,3 +2,4 @@
 *.json
 *.lock
 /logs
+/reporte
